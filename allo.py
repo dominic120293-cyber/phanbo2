@@ -4,6 +4,7 @@ import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 
+def run_allocation(input_file_path, output_file_path):
 # ================== ĐỌC DỮ LIỆU TỪ FILE 1112.xlsx ==================
 wb_data = openpyxl.load_workbook("1112.xlsx")
 ws_data = wb_data.active
@@ -292,3 +293,4 @@ for ws in [ws_matrix, ws_detail, ws_comb]:
 
 wb_out.save("Allocation_Result.xlsx")
 print("✅ Đã xuất file: Allocation_Result.xlsx với 3 sheet: Matrix, Detail, Combined")
+    pass
