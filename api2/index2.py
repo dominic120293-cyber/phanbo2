@@ -1,7 +1,7 @@
 import os
 import tempfile
 from flask import Flask, request, render_template, send_file
-from solver import run_allocation   # Import logic từ file solver.py
+from allo import run_allocation   # import hàm từ allo.py
 
 app = Flask(__name__, template_folder='../templates')
 app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
@@ -26,7 +26,7 @@ def upload_file():
 
     output_path = os.path.join(app.config['UPLOAD_FOLDER'], 'Allocation_Result.xlsx')
     try:
-        run_allocation(input_path, output_path)
+        run_allocation(input_path, output_path)   # gọi hàm từ allo
     except Exception as e:
         return f'Lỗi xử lý: {str(e)}', 500
 
