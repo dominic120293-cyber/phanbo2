@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Optimizing Allocation Tool</title>
+    <title>Yard Allocation Tool</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: #121212;
             color: #e0e0e0;
@@ -30,20 +26,8 @@
             text-align: center;
             border: 1px solid #333;
         }
-        h1 {
-            font-weight: 300;
-            font-size: 28px;
-            margin-bottom: 10px;
-            color: #bb86fc;
-            letter-spacing: 1px;
-        }
-        .subtitle {
-            color: #888;
-            margin-bottom: 30px;
-            font-size: 14px;
-            border-bottom: 1px solid #2c2c2c;
-            padding-bottom: 20px;
-        }
+        h1 { font-weight: 300; font-size: 28px; margin-bottom: 10px; color: #bb86fc; letter-spacing: 1px; }
+        .subtitle { color: #888; margin-bottom: 30px; font-size: 14px; border-bottom: 1px solid #2c2c2c; padding-bottom: 20px; }
         .upload-area {
             background-color: #252525;
             border: 2px dashed #444;
@@ -53,25 +37,10 @@
             transition: all 0.3s;
             cursor: pointer;
         }
-        .upload-area:hover {
-            border-color: #bb86fc;
-            background-color: #2a2a2a;
-        }
-        .upload-area label {
-            display: block;
-            font-size: 16px;
-            color: #aaa;
-            cursor: pointer;
-        }
-        .upload-area input[type="file"] {
-            display: none;
-        }
-        .upload-area .file-name {
-            margin-top: 12px;
-            font-size: 14px;
-            color: #bb86fc;
-            word-break: break-all;
-        }
+        .upload-area:hover { border-color: #bb86fc; background-color: #2a2a2a; }
+        .upload-area label { display: block; font-size: 16px; color: #aaa; cursor: pointer; }
+        .upload-area input[type="file"] { display: none; }
+        .upload-area .file-name { margin-top: 12px; font-size: 14px; color: #bb86fc; word-break: break-all; }
         .btn {
             background-color: #bb86fc;
             border: none;
@@ -85,60 +54,32 @@
             width: 100%;
             letter-spacing: 0.5px;
         }
-        .btn:hover {
-            background-color: #a06cd9;
-        }
-        .btn:active {
-            transform: scale(0.97);
-        }
-        .btn:disabled {
-            background-color: #555;
-            color: #888;
-            cursor: not-allowed;
-        }
-        .status {
-            margin-top: 20px;
-            font-size: 15px;
-            min-height: 24px;
-        }
-        .status.loading {
-            color: #ffb74d;
-        }
-        .status.success {
-            color: #81c784;
-        }
-        .status.error {
-            color: #e57373;
-        }
-        .footer {
-            margin-top: 30px;
-            font-size: 12px;
-            color: #555;
-            border-top: 1px solid #2c2c2c;
-            padding-top: 20px;
-        }
-        .footer a {
-            color: #888;
-            text-decoration: none;
-        }
-        .footer a:hover {
-            color: #bb86fc;
-        }
+        .btn:hover { background-color: #a06cd9; }
+        .btn:active { transform: scale(0.97); }
+        .btn:disabled { background-color: #555; color: #888; cursor: not-allowed; }
+        .status { margin-top: 20px; font-size: 15px; min-height: 24px; }
+        .status.loading { color: #ffb74d; }
+        .status.success { color: #81c784; }
+        .status.error { color: #e57373; }
+        .footer { margin-top: 30px; font-size: 12px; color: #555; border-top: 1px solid #2c2c2c; padding-top: 20px; }
+        .footer a { color: #888; text-decoration: none; }
+        .footer a:hover { color: #bb86fc; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📊 OPTIMAL ALLOCATION </h1>
-        <div class="subtitle">Container Optimization Yard-STS</div>
+        <h1>📊 Yard Allocation</h1>
+        <div class="subtitle">Tối ưu phân bổ Yard – STS</div>
 
-        <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+        <!-- Không dùng thẻ form truyền thống, xử lý bằng JS -->
+        <div id="uploadArea">
             <div class="upload-area" id="dropArea">
                 <label for="fileInput">📁 Chọn file Excel (1112.xlsx)</label>
-                <input type="file" id="fileInput" name="file" accept=".xlsx" required>
+                <input type="file" id="fileInput" accept=".xlsx" required>
                 <div class="file-name" id="fileName">Chưa có file</div>
             </div>
-            <button type="submit" class="btn" id="runBtn">▶ Chạy</button>
-        </form>
+            <button class="btn" id="runBtn">▶ Chạy</button>
+        </div>
 
         <div class="status" id="status">Sẵn sàng</div>
         <div class="footer">
@@ -151,10 +92,10 @@
         const fileName = document.getElementById('fileName');
         const dropArea = document.getElementById('dropArea');
         const statusDiv = document.getElementById('status');
-        const form = document.getElementById('uploadForm');
         const runBtn = document.getElementById('runBtn');
 
-        fileInput.addEventListener('change', function(e) {
+        // Cập nhật tên file khi chọn
+        fileInput.addEventListener('change', function() {
             if (this.files.length > 0) {
                 fileName.textContent = this.files[0].name;
                 statusDiv.textContent = '✅ File đã chọn';
@@ -166,27 +107,65 @@
             }
         });
 
+        // Kích hoạt click vào input file
         dropArea.addEventListener('click', function() {
             fileInput.click();
         });
 
-        form.addEventListener('submit', function(e) {
+        // Xử lý sự kiện nhấn nút Run
+        runBtn.addEventListener('click', async function() {
             if (!fileInput.files.length) {
-                e.preventDefault();
                 statusDiv.textContent = '⚠️ Vui lòng chọn file trước';
                 statusDiv.className = 'status error';
                 return;
             }
+
+            // Vô hiệu hóa nút, hiển thị đang xử lý
             runBtn.disabled = true;
             runBtn.textContent = '⏳ Đang xử lý...';
             statusDiv.textContent = '🔄 Đang chạy mô hình, vui lòng đợi...';
             statusDiv.className = 'status loading';
-        });
 
-        // Xử lý khi trang tải lại sau khi tải file (nếu có lỗi)
-        window.addEventListener('load', function() {
-            if (fileInput.files.length) {
-                fileName.textContent = fileInput.files[0].name;
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    let errorText = await response.text();
+                    throw new Error(errorText || 'Lỗi server');
+                }
+
+                // Tải file
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Allocation_Result.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+
+                statusDiv.textContent = '✅ Tải file thành công!';
+                statusDiv.className = 'status success';
+
+                // (Tùy chọn) Reset toàn bộ: xóa file đã chọn
+                // fileInput.value = '';
+                // fileName.textContent = 'Chưa có file';
+                // statusDiv.textContent = 'Sẵn sàng';
+                // statusDiv.className = 'status';
+            } catch (error) {
+                statusDiv.textContent = '❌ ' + error.message;
+                statusDiv.className = 'status error';
+            } finally {
+                // Khôi phục nút về trạng thái ban đầu
+                runBtn.disabled = false;
+                runBtn.textContent = '▶ Chạy';
             }
         });
     </script>
